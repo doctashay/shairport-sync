@@ -673,7 +673,10 @@ int parse_options(int argc, char **argv) {
   } else {
     debug(1, "looking for configuration file at full path \"%s\"", config_file_real_path);
     /* Read the file. If there is an error, report it and exit. */
-    if (config_read_file(&config_file_stuff, config_file_real_path)) {
+    if (!config_read_file(&config_file_stuff, config_file_real_path)) {
+      die("Error reading configuration file \"%s\" at line %d: %s", config_file_real_path,
+          config_error_line(&config_file_stuff), config_error_text(&config_file_stuff));
+    } else {
       config_set_auto_convert(&config_file_stuff,
                               1); // allow autoconversion from int/float to int/float
       // make config.cfg point to it
